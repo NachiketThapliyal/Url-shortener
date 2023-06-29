@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortner</title>
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cyan: hsl(180, 66%, 49%);
+  --dark-violet: hsl(257, 27%, 26%);
+  --red: hsl(0, 87%, 67%);
+  --gray: hsl(0, 0%, 75%);
+  --grayish-violet: hsl(257, 7%, 63%);
+  --very-dark-blue: hsl(255, 11%, 22%);
+  --very-dark-violet: hsl(260, 8%, 14%);
+}
+body {
+  font-size: 18px;
+  font-family: "poppins", "san-serif";
+  /* max-width: 58em; */
+  margin-inline: auto;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 1.2rem;
+  margin-bottom: 3rem;
+}
+.hamburger {
+  display: none;
+}
+.bar {
+  display: block;
+  width: 1.5rem;
+  height: 0.2rem;
+  margin: 0.3rem auto;
+  transition: all 0.3s ease-in-out;
+  background-color: #000;
+}
+.left {
+  display: flex;
+}
+.left ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+}
+.left ul a {
+  text-decoration: none;
+  padding: 0.2rem 1rem;
+  color: var(--grayish-violet);
+  cursor: pointer;
+}
+.sm {
+  display: none;
+}
+.right {
+  margin-left: 0.5rem;
+}
+.right ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+.right ul a {
+  text-decoration: none;
+  padding: 0.2rem 1rem;
+  color: var(--grayish-violet);
+  cursor: pointer;
+}
+.right ul .active {
+  background: cyan;
+  padding: 0.4rem 1.2rem;
+  border-radius: 1rem;
+  color: #fff;
+}
+section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.content {
+  max-width: 30rem;
+}
+.content h1 {
+  font-size: 3rem;
+  margin: 0.5rem;
+}
+.content p {
+  color: var(--grayish-violet);
+  margin: 0.5rem;
+}
+.content .btn {
+  background: cyan;
+  padding: 0.5rem 1.7rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  border-radius: 1.2rem;
+}
+.image img {
+  width: 85%;
+}
+
+input {
+  padding: 0.6rem 0.3rem;
+  border-radius: 0.2rem;
+  font-size: 1.2rem;
+  outline: none;
+  border: none;
+  margin: 0.5rem;
+  flex: 1;
+}
+.input-container {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dark-violet);
+  padding: 1rem 1.5rem;
+  position: relative;
+  width: min(100%, 40rem);
+  border-radius: 0.3rem;
+  overflow: hidden;
+}
+.input-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  background: var(--cyan);
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+ul li {
+  color: var(--grayish-violet);
+  margin: 0.2rem 0;
+  list-style: none;
+}
+ul :nth-child(1) {
+  color: #fff;
+  font-weight: bold;
+}
+
+.result .item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  background-color: #fff;
+  margin-inline: auto;
+}
+.newUrl-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  background: var(--cyan);
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+    </style>
+  </head>
+  
+  <body>
+    <header>
+      <div class="left">
+        <span style="font-weight: bold; font-size: 35px;">
+          URL SHORTENER
+        </span>
+        
+      </div>
+      <div class="right">
+        <ul class="nav-menu">
+          <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+          <li class="nav-item"><a href="#" class="nav-link active">Sign up</a></li>
+        </ul>
+      </div>
+      <div class="hamburger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+    </header>
+    <main>
+      <section>
+        <div class="content">
+          <h1>Shorten Your Links</h1>
+          <p>Paste your link in the textbox to shorten your URL links</p>
+        </div>
+        
+      </section>
+      <section class="link-input">
+        <form class="input-container">
+          <input type="text" placeholder="Shorten a link here" required/>
+          <button type="submit" class="input-btn">Shorten it!</button>
+        </form>
+      </section>
+      <div class="result">
+        
+      </div>
+
+<script>
+        const selectElement = (selector) => {
+  const element = document.querySelector(selector);
+  if (element) return element;
+  throw new Error(`Cannot find the element ${selector}`);
+};
+
+const form = selectElement("form");
+const input = selectElement("input");
+const result = selectElement(".result");
+const hamburger = selectElement(".hamburger");
+const navMenu = selectElement(".nav-menu");
+
+hamburger.addEventListener("click", () => {
+  hamburger.classList.toggle("active");
+  navMenu.classList.toggle("active");
+});
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const url = input.value;
+
+  shortenUrl(url);
+});
+
+async function shortenUrl(url) {
+  try {
+    const res = await fetch(`https://api.shrtco.de/v2/shorten?url=${url}`);
+    const data = await res.json();
+    const newUrl = document.createElement("div");
+    newUrl.classList.add("item");
+    newUrl.innerHTML = `
+   <span>${url} is converted to </span><span>${data.result.short_link}</span>
+   <button class="newUrl-btn" >Copy</button>
+   `;
+    result.prepend(newUrl);
+    const copyBtn = result.querySelector(".newUrl-btn");
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(copyBtn.previousElementSibling.textContent);
+    });
+    input.value = "";
+  } catch (err) {
+    console.log(err);
+  }
+}
+    </script>
+  </body>
+</html>
